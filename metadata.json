@@ -1,0 +1,7 @@
+{
+  "name": "Sales Sidekik",
+  "description": "An AI-powered sales operating system for Account Executives to manage territories, account plans, and coaching using Google Gemini.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Sales Sidekik Co-Pilot",
+  "version": "1.0.0",
+  "description": "AI-powered sales intelligence in your sidebar. Detects email context and meeting status automatically.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://mail.google.com/*",
+    "*://meet.google.com/*"
+  ],
+  "side_panel": {
+    "default_path": "extension/sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open Sales Sidekik"
+  },
+  "icons": {
+    "16": "favicon.svg",
+    "48": "favicon.svg",
+    "128": "favicon.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://mail.google.com/*",
+        "*://meet.google.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}
