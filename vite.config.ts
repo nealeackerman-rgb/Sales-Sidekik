@@ -1,32 +1,29 @@
-
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Use path.resolve() to get the current working directory (project root).
-  const root = resolve();
-  const env = loadEnv(mode, root, '');
-  
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  const env = loadEnv(mode, process.cwd(), '');
+
   return {
     plugins: [react()],
-    // Base path set to './' to ensure assets are resolved correctly 
-    // within the chrome-extension:// protocol and standard web hosting.
+    // Added to resolve pathing issues
+    // https://stackoverflow.com/questions/68241392/vite-build-produces-makes-a-js-file-that-has-an-incorrect-path-to-an-asset
     base: './',
     build: {
-      outDir: 'dist', // Explicitly setting the output directory
+      outDir: 'dist',
       rollupOptions: {
         input: {
-          // Entry point 1: The Main Web App
-          main: resolve(root, 'index.html'),
-          // Entry point 2: The Chrome Extension Side Panel
-          // In this environment, the project root conceptually serves as the 'src' folder.
-          // We resolve the path relative to this root to avoid resolution errors.
-          sidepanel: resolve(root, 'extension/sidepanel.html'),
+          main: resolve(__dirname, 'index.html'),
+          sidepanel: resolve(__dirname, 'extension/sidepanel.html'),
         },
       },
     },
-    // Mapping environment variables to the client-side execution context.
+    // Define process.env variables
+    // https://vitejs.dev/config/#define
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY || env.API_KEY),
       'process.env.FIREBASE_API_KEY': JSON.stringify(env.FIREBASE_API_KEY),
@@ -39,3 +36,5 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+// Trigger re-deploy
